@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --wa-green:#00a884;
+  --wa-green-dark:#008069;
+  --wa-green-light:#d9fdd3;
+  --wa-bg:#111b21;
+  --wa-panel:#202c33;
+  --wa-panel2:#2a3942;
+  --wa-border:#ffffff14;
+  --wa-text:#e9edef;
+  --wa-text2:#8696a0;
+  --wa-bubble-out:#005c4b;
+  --wa-bubble-in:#202c33;
+  --wa-search:#2a3942;
+  --wa-header:#202c33;
+  --wa-tick:#53bdeb;
+  --wa-unread:#00a884;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  background:var(--wa-bg);
+  color:var(--wa-text);
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+}
+
+/* ── LOGIN ── */
+#login-screen{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--wa-bg);
+  flex-direction:column;
+  gap:32px;
+}
+.wa-login-card{
+  background:var(--wa-panel);
+  border-radius:16px;
+  padding:40px 44px;
+  width:420px;
+  text-align:center;
+  animation:fadeUp .4s ease forwards;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.wa-logo{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:28px;
+}
+.wa-logo-icon{
+  width:52px;height:52px;
+  background:var(--wa-green);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.wa-logo-text{
+  font-size:28px;font-weight:600;
+  color:var(--wa-text);
+  letter-spacing:-.3px;
+}
+.wa-login-title{
+  font-size:22px;font-weight:600;
+  margin-bottom:8px;color:var(--wa-text);
+}
+.wa-login-sub{
+  font-size:14px;color:var(--wa-text2);
+  margin-bottom:28px;line-height:1.5;
+}
+.wa-input-group{margin-bottom:14px;text-align:left}
+.wa-input-label{
+  font-size:12px;color:var(--wa-text2);
+  margin-bottom:6px;display:block;
+  font-weight:500;
+}
+.wa-input{
+  width:100%;
+  background:var(--wa-search);
+  border:none;
+  border-bottom:2px solid var(--wa-border);
+  border-radius:8px 8px 0 0;
+  padding:12px 14px;
+  color:var(--wa-text);
+  font-family:inherit;
+  font-size:15px;
+  outline:none;
+  transition:border-color .2s;
+}
+.wa-input:focus{border-bottom-color:var(--wa-green)}
+.wa-btn{
+  width:100%;
+  padding:13px;
+  border-radius:24px;
+  border:none;
+  background:var(--wa-green);
+  color:#fff;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:8px;
+  letter-spacing:.2px;
+  transition:background .15s;
+}
+.wa-btn:hover{background:var(--wa-green-dark)}
+.wa-login-footer{
+  margin-top:20px;font-size:13px;color:var(--wa-text2);
+}
+.wa-login-footer a{color:var(--wa-green);text-decoration:none}
+
+/* ── APP ── */
+#app-screen{display:none;width:100%;height:100%}
+.wa-layout{display:flex;height:100vh;width:100%}
+
+/* ── LEFT PANEL ── */
+.wa-left{
+  width:30%;
+  min-width:360px;
+  max-width:420px;
+  background:var(--wa-panel);
+  border-right:1px solid var(--wa-border);
+  display:flex;flex-direction:column;height:100%;
+}
+.wa-left-header{
+  background:var(--wa-header);
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:59px;flex-shrink:0;
+}
+.wa-me-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:#6b7c85;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:600;color:#fff;
+  cursor:pointer;
+}
+.wa-header-icons{display:flex;gap:4px}
+.wa-icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:none;border:none;
+  color:var(--wa-text2);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  transition:background .15s;
+}
+.wa-icon-btn:hover{background:var(--wa-panel2)}
+.wa-search-wrap{
+  padding:8px 12px;
+  background:var(--wa-panel);
+  flex-shrink:0;
+}
+.wa-search-inner{
+  background:var(--wa-search);
+  border-radius:8px;
+  display:flex;align-items:center;
+  padding:8px 12px;gap:10px;
+}
+.wa-search-icon{color:var(--wa-text2);font-size:16px;flex-shrink:0}
+.wa-search-input{
+  background:none;border:none;outline:none;
+  color:var(--wa-text);font-family:inherit;font-size:15px;flex:1;
+}
+.wa-search-input::placeholder{color:var(--wa-text2)}
+.wa-tabs{
+  display:flex;
+  border-bottom:1px solid var(--wa-border);
+  background:var(--wa-panel);
+  flex-shrink:0;
+}
+.wa-tab{
+  flex:1;text-align:center;padding:10px 4px;
+  font-size:13px;font-weight:500;
+  color:var(--wa-text2);cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .15s;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+}
+.wa-tab.active{color:var(--wa-green);border-bottom-color:var(--wa-green)}
+
+/* ── CHAT LIST ── */
+.wa-chat-list{
+  flex:1;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--wa-panel2) transparent;
+}
+.wa-chat-list::-webkit-scrollbar{width:5px}
+.wa-chat-list::-webkit-scrollbar-thumb{background:var(--wa-panel2);border-radius:4px}
+.wa-chat-item{
+  display:flex;align-items:center;gap:13px;
+  padding:10px 16px;
+  cursor:pointer;
+  transition:background .1s;
+  border-bottom:1px solid var(--wa-border);
+  position:relative;
+}
+.wa-chat-item:hover{background:var(--wa-panel2)}
+.wa-chat-item.active{background:var(--wa-panel2)}
+.wa-avatar{
+  width:49px;height:49px;border-radius:50%;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:600;color:#fff;
+  position:relative;
+}
+.wa-avatar.online::after{
+  content:'';position:absolute;
+  bottom:2px;right:2px;
+  width:11px;height:11px;
+  background:var(--wa-green);
+  border-radius:50%;border:2px solid var(--wa-panel);
+}
+.wa-chat-info{flex:1;min-width:0}
+.wa-chat-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.wa-chat-name{font-size:17px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--wa-text)}
+.wa-chat-time{font-size:12px;color:var(--wa-text2);white-space:nowrap;flex-shrink:0;margin-left:6px}
+.wa-chat-time.unread-time{color:var(--wa-green)}
+.wa-chat-row2{display:flex;justify-content:space-between;align-items:center}
+.wa-chat-preview{font-size:14px;color:var(--wa-text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.wa-chat-preview .tick{color:var(--wa-tick);font-size:13px;margin-right:2px}
+.wa-badge{
+  min-width:20px;height:20px;border-radius:10px;
+  background:var(--wa-unread);color:#fff;
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 5px;flex-shrink:0;margin-left:6px;
+}
+.wa-mute-icon{color:var(--wa-text2);font-size:14px;margin-left:4px;flex-shrink:0}
+
+/* ── RIGHT PANEL ── */
+.wa-right{
+  flex:1;display:flex;flex-direction:column;height:100%;
+  background:var(--wa-bg);
+  position:relative;
+}
+/* WhatsApp chat background pattern */
+.wa-right::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23182229' fill-opacity='1'%3E%3Cpath d='M40 0C17.9 0 0 17.9 0 40s17.9 40 40 40 40-17.9 40-40S62.1 0 40 0zm0 72C22.3 72 8 57.7 8 40S22.3 8 40 8s32 14.3 32 32-14.3 32-32 32z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size:412px;
+  opacity:.06;
+  pointer-events:none;
+  z-index:0;
+}
+.wa-right>*{position:relative;z-index:1}
+
+.wa-chat-header{
+  background:var(--wa-header);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:12px;
+  height:59px;flex-shrink:0;
+  border-bottom:1px solid var(--wa-border);
+}
+.wa-chat-header-info{flex:1;min-width:0}
+.wa-chat-header-name{font-size:17px;font-weight:500;color:var(--wa-text)}
+.wa-chat-header-status{font-size:13px;color:var(--wa-text2)}
+.wa-chat-header-icons{display:flex;gap:2px}
+
+/* ── MESSAGES ── */
+.wa-messages{
+  flex:1;overflow-y:auto;
+  padding:8px 6% 8px;
+  display:flex;flex-direction:column;
+  scrollbar-width:thin;scrollbar-color:var(--wa-panel2) transparent;
+}
+.wa-messages::-webkit-scrollbar{width:5px}
+.wa-messages::-webkit-scrollbar-thumb{background:var(--wa-panel2);border-radius:4px}
+
+.wa-day-badge{
+  display:flex;align-items:center;justify-content:center;
+  margin:12px 0 8px;
+}
+.wa-day-badge span{
+  background:#182229;
+  color:var(--wa-text2);
+  font-size:12.5px;
+  padding:5px 12px;
+  border-radius:7px;
+  font-weight:500;
+  box-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+.wa-msg-group{display:flex;flex-direction:column;margin-bottom:2px}
+.wa-msg-group.out{align-items:flex-end}
+.wa-msg-group.in{align-items:flex-start}
+
+.wa-sender-name{
+  font-size:13px;font-weight:500;
+  margin-bottom:2px;padding:0 12px;
+}
+
+.wa-bubble{
+  max-width:65%;
+  padding:6px 7px 8px 9px;
+  border-radius:7.5px;
+  font-size:14.2px;
+  line-height:1.42;
+  word-break:break-word;
+  position:relative;
+  box-shadow:0 1px 2px rgba(0,0,0,.3);
+  margin-bottom:2px;
+}
+.wa-msg-group.out .wa-bubble{
+  background:var(--wa-bubble-out);
+  color:#e9edef;
+  border-top-right-radius:2px;
+}
+.wa-msg-group.in .wa-bubble{
+  background:var(--wa-bubble-in);
+  color:#e9edef;
+  border-top-left-radius:2px;
+}
+/* Tail for first bubble in group */
+.wa-msg-group.out .wa-bubble:first-of-type::after{
+  content:'';position:absolute;
+  top:0;right:-8px;
+  width:0;height:0;
+  border-left:8px solid var(--wa-bubble-out);
+  border-top:8px solid transparent;
+}
+.wa-msg-group.in .wa-bubble:first-of-type::after{
+  content:'';position:absolute;
+  top:0;left:-8px;
+  width:0;height:0;
+  border-right:8px solid var(--wa-bubble-in);
+  border-top:8px solid transparent;
+}
+
+.wa-bubble-meta{
+  display:flex;align-items:flex-end;justify-content:flex-end;
+  gap:3px;margin-top:1px;margin-left:8px;float:right;
+  clear:right;
+}
+.wa-bubble-time{font-size:11px;color:rgba(255,255,255,.6);white-space:nowrap}
+.wa-tick-icon{font-size:13px;color:var(--wa-tick)}
+
+/* ── INPUT BAR ── */
+.wa-input-bar{
+  padding:8px 16px;
+  background:var(--wa-header);
+  display:flex;align-items:center;gap:8px;
+  flex-shrink:0;min-height:62px;
+}
+.wa-msg-input-wrap{
+  flex:1;
+  background:var(--wa-search);
+  border-radius:21px;
+  display:flex;align-items:center;
+  padding:9px 14px;gap:10px;
+}
+.wa-msg-input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--wa-text);font-family:inherit;font-size:15px;
+  resize:none;max-height:100px;line-height:1.4;
+}
+.wa-msg-input::placeholder{color:var(--wa-text2)}
+.wa-emoji-btn,.wa-attach-btn{
+  color:var(--wa-text2);font-size:22px;
+  background:none;border:none;cursor:pointer;flex-shrink:0;
+  padding:2px;transition:color .15s;
+}
+.wa-emoji-btn:hover,.wa-attach-btn:hover{color:var(--wa-text)}
+.wa-send-btn{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--wa-green);border:none;
+  color:#fff;font-size:20px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.wa-send-btn:hover{background:var(--wa-green-dark)}
+
+/* ── EMPTY STATE ── */
+.wa-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  color:var(--wa-text2);gap:16px;
+  background:transparent;
+}
+.wa-empty-icon{font-size:80px;opacity:.15}
+.wa-empty-title{font-size:32px;font-weight:300;color:var(--wa-text);opacity:.7}
+.wa-empty-sub{font-size:14px;text-align:center;max-width:280px;line-height:1.5}
+.wa-empty-lock{font-size:12px;color:var(--wa-text2);display:flex;align-items:center;gap:5px;opacity:.6}
+
+/* ── ENCRYPT BANNER ── */
+.wa-encrypt-bar{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:#182229;
+  color:var(--wa-text2);
+  font-size:12.5px;
+  padding:7px 16px;
+  margin:8px auto;
+  border-radius:7px;
+  max-width:380px;
+  text-align:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.3);
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="wa-login-card">
+    <div class="wa-logo">
+      <div class="wa-logo-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2.002c-5.514 0-9.998 4.484-9.998 9.998 0 1.76.46 3.411 1.269 4.847L2.002 22l5.277-1.248A9.96 9.96 0 0012.001 22c5.514 0 9.997-4.484 9.997-9.998 0-5.516-4.483-10-9.997-10zm0 18.343a8.32 8.32 0 01-4.247-1.162l-.305-.181-3.133.741.766-3.056-.2-.315A8.33 8.33 0 013.671 12c0-4.594 3.737-8.331 8.33-8.331 4.594 0 8.33 3.737 8.33 8.331 0 4.594-3.736 8.343-8.33 8.343z"/></svg>
+      </div>
+      <span class="wa-logo-text">WhatsApp</span>
+    </div>
+    <div class="wa-login-title">Sign in to WhatsApp</div>
+    <div class="wa-login-sub">Enter your phone number and password to continue</div>
+    <div class="wa-input-group">
+      <label class="wa-input-label">Phone number or email</label>
+      <input class="wa-input" type="text" id="login-user" value="+1 (555) 012-3456" autocomplete="off">
+    </div>
+    <div class="wa-input-group">
+      <label class="wa-input-label">Password</label>
+      <input class="wa-input" type="password" id="login-pass" value="mypassword">
+    </div>
+    <button class="wa-btn" onclick="doLogin()">NEXT</button>
+    <div class="wa-login-footer">Don't have an account? <a href="#">Register</a></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <div class="wa-layout">
+
+    <!-- LEFT -->
+    <div class="wa-left">
+      <div class="wa-left-header">
+        <div class="wa-me-avatar">A</div>
+        <div class="wa-header-icons">
+          <button class="wa-icon-btn" title="Communities">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/></svg>
+          </button>
+          <button class="wa-icon-btn" title="New chat">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.069v-2.084h6.947v2.084zm3-4H7.069V6.939h9.947v2.105z"/></svg>
+          </button>
+          <button class="wa-icon-btn" title="Menu">⋮</button>
+        </div>
+      </div>
+      <div class="wa-search-wrap">
+        <div class="wa-search-inner">
+          <span class="wa-search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z"/></svg>
+          </span>
+          <input class="wa-search-input" type="text" placeholder="Search or start new chat" oninput="filterChats(this.value)">
+        </div>
+      </div>
+      <div class="wa-tabs">
+        <div class="wa-tab active" onclick="switchTab(this,'all')">All</div>
+        <div class="wa-tab" onclick="switchTab(this,'unread')">Unread</div>
+        <div class="wa-tab" onclick="switchTab(this,'groups')">Groups</div>
+      </div>
+      <div class="wa-chat-list" id="chat-list"></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="wa-right">
+      <div class="wa-empty" id="empty-state">
+        <div class="wa-empty-icon">
+          <svg viewBox="0 0 24 24" width="80" height="80" fill="currentColor" opacity=".15"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2.002c-5.514 0-9.998 4.484-9.998 9.998 0 1.76.46 3.411 1.269 4.847L2.002 22l5.277-1.248A9.96 9.96 0 0012.001 22c5.514 0 9.997-4.484 9.997-9.998 0-5.516-4.483-10-9.997-10z"/></svg>
+        </div>
+        <div class="wa-empty-title">WhatsApp Web</div>
+        <div class="wa-empty-sub">Send and receive messages without keeping your phone online.</div>
+        <div class="wa-empty-lock">🔒 Your personal messages are end-to-end encrypted</div>
+      </div>
+      <div id="chat-view" style="display:none;flex-direction:column;height:100%">
+        <div class="wa-chat-header">
+          <div class="wa-avatar" id="panel-avatar"></div>
+          <div class="wa-chat-header-info">
+            <div class="wa-chat-header-name" id="panel-name"></div>
+            <div class="wa-chat-header-status" id="panel-status"></div>
+          </div>
+          <div class="wa-chat-header-icons">
+            <button class="wa-icon-btn">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z"/></svg>
+            </button>
+            <button class="wa-icon-btn" onclick="doLogout()" title="Log out">⋮</button>
+          </div>
+        </div>
+        <div class="wa-messages" id="messages"></div>
+        <div class="wa-input-bar">
+          <button class="wa-emoji-btn">😊</button>
+          <div class="wa-msg-input-wrap">
+            <textarea class="wa-msg-input" placeholder="Type a message" rows="1" readonly></textarea>
+            <button class="wa-attach-btn">📎</button>
+          </div>
+          <button class="wa-send-btn">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Avatar colors matching WhatsApp's palette
+const AV_COLORS = [
+  '#e06c5a','#d4715e','#c46358',
+  '#6b9fd4','#5a89c4','#4e7aad',
+  '#7bc67e','#5db560','#4da052',
+  '#e8b86a','#d4a45a','#c49046',
+  '#a07cbd','#8f6aad','#7d5a9c',
+  '#6bbdc6','#5aaab4','#4a96a0',
+  '#e08878','#c97060','#b56050',
+  '#82c4a0','#6ab38c','#58a07a',
+  '#d4a0c4','#c08ab0','#ac769c',
+  '#b4a47c','#a09068','#8c7c54',
+];
+
+const C = [
+  {id:1,  name:"Maya Rivera",     col:AV_COLORS[0],  on:true,  un:4, tm:"9:41 AM",   pr:"omg did you see what happened 😭",         grp:false, muted:false},
+  {id:2,  name:"Jake Morales",    col:AV_COLORS[3],  on:false, un:0, tm:"8:12 AM",   pr:"bro that was the funniest thing lmao",     grp:false, muted:false},
+  {id:3,  name:"Dev Squad 🛠️",   col:AV_COLORS[6],  on:true,  un:7, tm:"Yesterday", pr:"Jordan: merged. finally lol",              grp:true,  muted:false},
+  {id:4,  name:"Sam Park",        col:AV_COLORS[9],  on:true,  un:1, tm:"Yesterday", pr:"you free saturday morning?",               grp:false, muted:false},
+  {id:5,  name:"Priya Nair",      col:AV_COLORS[12], on:false, un:0, tm:"Monday",    pr:"hahaha okay fair enough 😂",               grp:false, muted:true},
+  {id:6,  name:"Weekend Crew 🎉", col:AV_COLORS[15], on:false, un:3, tm:"Sunday",    pr:"Carlos: dinner spot confirmed ✅",          grp:true,  muted:false},
+  {id:7,  name:"Eli Zhang",       col:AV_COLORS[18], on:false, un:0, tm:"Apr 26",    pr:"yeah that article was crazy good",          grp:false, muted:false},
+  {id:8,  name:"Mia Chen",        col:AV_COLORS[21], on:true,  un:2, tm:"Apr 25",    pr:"okay I NEED to tell you something",         grp:false, muted:false},
+  {id:9,  name:"Book Club 📚",    col:AV_COLORS[24], on:false, un:5, tm:"Apr 24",    pr:"Lena: chapter 18 broke me ngl",             grp:true,  muted:true},
+  {id:10, name:"Jordan Lee",      col:AV_COLORS[27], on:false, un:0, tm:"Apr 23",    pr:"bet. see you at 7",                        grp:false, muted:false},
+];
+
+function initials(name){return name.replace(/[^\w\s]/g,'').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase()||'?'}
+
+const V = {
+1:[
+  {d:"Apr 23 · Wednesday",o:false,t:"10:02 AM",m:"hey!! you awake yet lol"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:14 AM",m:"barely 😭 what's up"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:15 AM",m:"okay so you know that coffee shop on elm we always go to"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:16 AM",m:"yeah the one with the weird cat painting"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:16 AM",m:"EXACTLY okay so I went this morning and they have a whole new menu"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:17 AM",m:"they took the lavender latte off and I'm actually devastated"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:19 AM",m:"NO. that was the only reason I went there"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:20 AM",m:"right?? I asked the barista and she said they changed suppliers"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:22 AM",m:"this is a genuine tragedy. I'm mourning"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:23 AM",m:"lmaooo okay but the new hazelnut one is actually lowkey fire"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:25 AM",m:"fine. we go saturday and I'll judge for myself"},
+  {d:"Apr 23 · Wednesday",o:false,t:"10:26 AM",m:"deal 🤝 10am?"},
+  {d:"Apr 23 · Wednesday",o:true, t:"10:27 AM",m:"works for me"},
+  {d:"Apr 24 · Thursday", o:false,t:"2:45 PM", m:"okay random but did you finish that show yet"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:10 PM", m:"which one"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:11 PM", m:"the one I sent you like two weeks ago. the thriller"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:13 PM", m:"oh YEAH I finished it last night actually"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:13 PM", m:"AND??"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:14 PM", m:"bro the plot twist in episode 7 I did not see that coming at all"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:14 PM", m:"RIGHT the whole season was building to it and I missed every clue"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:16 PM", m:"I literally rewound it three times. also the ending?? what was that"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:17 PM", m:"I know I was staring at the ceiling for like an hour after"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:19 PM", m:"the ceiling really does become important after a shocking episode lol"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:20 PM", m:"hahaha okay but real talk do you think season 2 will answer the lighthouse thing"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:22 PM", m:"honestly no. they're gonna leave it open I feel like"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:23 PM", m:"ugh you're probably right and I hate it"},
+  {d:"Apr 25 · Friday",   o:false,t:"8:14 PM", m:"also can you recommend me a good book? my brain needs stimulation"},
+  {d:"Apr 25 · Friday",   o:true, t:"8:28 PM", m:"what genre are you feeling"},
+  {d:"Apr 25 · Friday",   o:false,t:"8:29 PM", m:"something that'll keep me up at night but in a good way"},
+  {d:"Apr 25 · Friday",   o:true, t:"8:31 PM", m:"okay try 'The Secret History' if you haven't already"},
+  {d:"Apr 25 · Friday",   o:false,t:"8:33 PM", m:"I've heard of it. dark academia vibes?"},
+  {d:"Apr 25 · Friday",   o:true, t:"8:34 PM", m:"exactly. you'll tear through it"},
+  {d:"Apr 25 · Friday",   o:false,t:"8:35 PM", m:"adding to cart right now"},
+  {d:"Apr 26 · Saturday", o:false,t:"9:58 AM", m:"omw 5 mins away"},
+  {d:"Apr 26 · Saturday", o:true, t:"10:01 AM",m:"I'm already here grabbed us a table by the window"},
+  {d:"Apr 26 · Saturday", o:false,t:"10:02 AM",m:"you're literally the best"},
+  {d:"Apr 26 · Saturday", o:false,t:"12:34 PM",m:"okay I'll admit the hazelnut thing was amazing"},
+  {d:"Apr 26 · Saturday", o:true, t:"12:35 PM",m:"told you 😌"},
+  {d:"Apr 26 · Saturday", o:false,t:"12:36 PM",m:"still upset about lavender latte tho"},
+  {d:"Apr 26 · Saturday", o:true, t:"12:37 PM",m:"understandable have a great day"},
+  {d:"Apr 26 · Saturday", o:false,t:"12:38 PM",m:"lmaooo"},
+  {d:"Apr 27 · Sunday",   o:false,t:"9:04 PM", m:"okay three chapters into the secret history and I can't stop"},
+  {d:"Apr 27 · Sunday",   o:true, t:"9:18 PM", m:"I KNEW you'd love it. just wait"},
+  {d:"Apr 27 · Sunday",   o:false,t:"9:19 PM", m:"I'm already stressed about these characters and I've barely met them"},
+  {d:"Apr 27 · Sunday",   o:true, t:"9:21 PM", m:"that's the whole point lol"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:14 PM", m:"hey can I ask you something random"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:22 PM", m:"always"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:23 PM", m:"okay so there's this guy at work"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:23 PM", m:"oh?? 👀"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:24 PM", m:"stoppp lol it's not like that. he keeps leaving notes on my desk though"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:25 PM", m:"...what kind of notes"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:26 PM", m:"just like 'nice work on the Henderson project' type stuff"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:27 PM", m:"maya. girl. that's not nothing"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:28 PM", m:"you think??"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:29 PM", m:"I think you know what I think lol"},
+  {d:"Apr 28 · Monday",   o:false,t:"7:30 PM", m:"okay fine. he IS really nice"},
+  {d:"Apr 28 · Monday",   o:true, t:"7:31 PM", m:"there it is 😂"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"12:10 PM",m:"finished the secret history at 2am last night"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"12:22 PM",m:"and????"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"12:24 PM",m:"I'm not okay. I need to talk about the ending immediately"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"12:25 PM",m:"lunchtime call??"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"12:26 PM",m:"yes please"},
+  {d:"Apr 30 · Wednesday",o:false,t:"11:05 AM",m:"UPDATE: he asked if I wanted to get lunch"},
+  {d:"Apr 30 · Wednesday",o:true, t:"11:08 AM",m:"I KNEW IT"},
+  {d:"Apr 30 · Wednesday",o:false,t:"11:09 AM",m:"with the whole team though so I don't know if it counts"},
+  {d:"Apr 30 · Wednesday",o:true, t:"11:10 AM",m:"did he ask the whole team or did he happen to mention it to you specifically"},
+  {d:"Apr 30 · Wednesday",o:false,t:"11:11 AM",m:"...specifically me"},
+  {d:"Apr 30 · Wednesday",o:true, t:"11:11 AM",m:"MAYA."},
+  {d:"Apr 30 · Wednesday",o:false,t:"11:12 AM",m:"okay okay I'm going 😭"},
+  {d:"May 1 · Thursday",  o:false,t:"3:30 PM", m:"lunch was actually so fun"},
+  {d:"May 1 · Thursday",  o:true, t:"3:45 PM", m:"details. now."},
+  {d:"May 1 · Thursday",  o:false,t:"3:46 PM", m:"he's just really easy to talk to. we ended up staying like 20 mins late"},
+  {d:"May 1 · Thursday",  o:true, t:"3:47 PM", m:"that's such a good sign"},
+  {d:"May 1 · Thursday",  o:false,t:"3:48 PM", m:"I'm trying not to read too much into it"},
+  {d:"May 1 · Thursday",  o:true, t:"3:50 PM", m:"a little reading into it is healthy lol"},
+  {d:"May 1 · Thursday",  o:false,t:"3:51 PM", m:"hahaha okay fair enough"},
+  {d:"May 2 · Friday",    o:false,t:"6:00 PM", m:"wine after work? I need to debrief"},
+  {d:"May 2 · Friday",    o:true, t:"6:04 PM", m:"always. same place as last time?"},
+  {d:"May 2 · Friday",    o:false,t:"6:05 PM", m:"yes. 7?"},
+  {d:"May 2 · Friday",    o:true, t:"6:06 PM", m:"I'll be there"},
+  {d:"May 2 · Friday",    o:false,t:"10:40 PM",m:"tonight was so needed thank you"},
+  {d:"May 2 · Friday",    o:true, t:"10:52 PM",m:"always. text me when you're home safe"},
+  {d:"May 2 · Friday",    o:false,t:"11:08 PM",m:"home! also I think I'm going to say yes if he asks again"},
+  {d:"May 2 · Friday",    o:true, t:"11:10 PM",m:"ABOUT TIME 🎉 goodnight"},
+  {d:"May 5 · Monday",    o:false,t:"6:04 PM", m:"he texted me after work 😳"},
+  {d:"May 5 · Monday",    o:true, t:"6:08 PM", m:"WHAT"},
+  {d:"May 5 · Monday",    o:false,t:"6:09 PM", m:"just like 'hey hope your day was good' type message"},
+  {d:"May 5 · Monday",    o:true, t:"6:10 PM", m:"okay that is definitively not a work message lol"},
+  {d:"May 5 · Monday",    o:false,t:"6:13 PM", m:"yeah he asked if I wanted to hang out this weekend"},
+  {d:"May 5 · Monday",    o:true, t:"6:13 PM", m:"okay I need you to breathe"},
+  {d:"May 5 · Monday",    o:false,t:"6:15 PM", m:"I already said yes lol"},
+  {d:"May 5 · Monday",    o:true, t:"6:16 PM", m:"THAT'S MY GIRL 🎉"},
+  {d:"May 6 · Tuesday",   o:false,t:"9:16 PM", m:"we went to that little park by the river and just talked for like three hours"},
+  {d:"May 6 · Tuesday",   o:true, t:"9:17 PM", m:"three hours!! maya that's basically a date"},
+  {d:"May 6 · Tuesday",   o:false,t:"9:18 PM", m:"...yeah okay it kind of was"},
+  {d:"May 6 · Tuesday",   o:true, t:"9:19 PM", m:"I love this for you honestly"},
+  {d:"May 7 · Wednesday", o:false,t:"9:29 PM", m:"good I think?? he's genuinely just such a good person"},
+  {d:"May 7 · Wednesday", o:true, t:"9:30 PM", m:"I love this for you. I'm so happy"},
+  {d:"May 7 · Wednesday", o:false,t:"9:31 PM", m:"thank you for being the best 💜"},
+  {d:"May 8 · Thursday",  o:false,t:"9:40 AM", m:"omg did you see what happened 😭"},
+  {d:"May 8 · Thursday",  o:true, t:"9:41 AM", m:"WHAT NOW tell me everything"},
+],
+2:[
+  {d:"Apr 23 · Wednesday",o:true, t:"1:30 PM", m:"bro did you see the game last night"},
+  {d:"Apr 23 · Wednesday",o:false,t:"1:44 PM", m:"dude YES. that last quarter was insane"},
+  {d:"Apr 23 · Wednesday",o:true, t:"1:45 PM", m:"I literally screamed and my neighbor knocked on the wall lmao"},
+  {d:"Apr 23 · Wednesday",o:false,t:"1:47 PM", m:"worth it though right"},
+  {d:"Apr 23 · Wednesday",o:true, t:"1:48 PM", m:"100%. anyway you coming to Nico's on friday"},
+  {d:"Apr 23 · Wednesday",o:false,t:"1:50 PM", m:"should be there around 8"},
+  {d:"Apr 25 · Friday",   o:false,t:"7:58 PM", m:"still coming tonight?"},
+  {d:"Apr 25 · Friday",   o:true, t:"8:03 PM", m:"on my way now. 15 mins"},
+  {d:"Apr 25 · Friday",   o:false,t:"11:47 PM",m:"bro that was the funniest thing ever lmao"},
+  {d:"Apr 25 · Friday",   o:true, t:"11:52 PM",m:"I'm still crying. Nico's face when he dropped the cake 💀"},
+  {d:"Apr 27 · Sunday",   o:true, t:"2:14 PM", m:"yo you recover from friday"},
+  {d:"Apr 27 · Sunday",   o:false,t:"2:45 PM", m:"barely. just woke up lol"},
+  {d:"Apr 27 · Sunday",   o:false,t:"2:48 PM", m:"did you lose your jacket or did I see it on nico's couch"},
+  {d:"Apr 27 · Sunday",   o:true, t:"2:50 PM", m:"oh god yeah probably. I'll grab it next time"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"12:22 PM",m:"hey random question. you know anything about fixing a leaking tap"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"12:38 PM",m:"okay so usually it's the washer inside the tap. youtube 'replace tap washer' should sort you"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"12:40 PM",m:"you actually know what you're talking about??"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"12:41 PM",m:"my dad made me fix everything growing up. suffered so you don't have to"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"8:31 PM", m:"UPDATE: flooded my bathroom a little"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"8:33 PM", m:"LMAOOO I told you to turn off the water first"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"8:34 PM", m:"you did not say that"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"8:36 PM", m:"bro that was the funniest thing ever lmao"},
+  {d:"May 2 · Friday",    o:true, t:"4:33 PM", m:"the ridge trail. takes like 3 hours but the view is stupid good"},
+  {d:"May 2 · Friday",    o:false,t:"4:35 PM", m:"...fine but you're buying coffee"},
+  {d:"May 2 · Friday",    o:true, t:"4:36 PM", m:"deal"},
+  {d:"May 3 · Saturday",  o:true, t:"6:58 AM", m:"heading out in 10"},
+  {d:"May 3 · Saturday",  o:false,t:"7:05 AM", m:"I'm awake I'm awake"},
+  {d:"May 3 · Saturday",  o:false,t:"11:42 AM",m:"okay that view was absolutely worth the 7am"},
+  {d:"May 3 · Saturday",  o:true, t:"11:44 AM",m:"told you 😎"},
+  {d:"May 6 · Tuesday",   o:false,t:"5:16 PM", m:"told you the noise cancelling was on another level"},
+  {d:"May 6 · Tuesday",   o:true, t:"5:17 PM", m:"I put them on and my whole apartment disappeared"},
+  {d:"May 8 · Thursday",  o:false,t:"8:12 AM", m:"bro that was the funniest thing ever lmao"},
+],
+3:[
+  {d:"Apr 23 · Wednesday",o:false,n:"Jordan",t:"9:15 AM", m:"morning team. staging env is down again"},
+  {d:"Apr 23 · Wednesday",o:true,            t:"9:18 AM", m:"what's the error"},
+  {d:"Apr 23 · Wednesday",o:false,n:"Taylor",t:"9:19 AM", m:"502 bad gateway. looks like proxy config"},
+  {d:"Apr 23 · Wednesday",o:false,n:"Jordan",t:"9:21 AM", m:"config got overwritten in last deploy. I see it"},
+  {d:"Apr 23 · Wednesday",o:true,            t:"9:23 AM", m:"I'll roll it back now"},
+  {d:"Apr 23 · Wednesday",o:false,n:"Taylor",t:"9:26 AM", m:"back up. nice one"},
+  {d:"Apr 24 · Thursday", o:false,n:"Taylor",t:"3:02 PM", m:"PR is up for review. tagged you both"},
+  {d:"Apr 24 · Thursday", o:true,            t:"3:30 PM", m:"left a few comments. overall looks solid"},
+  {d:"Apr 24 · Thursday", o:false,n:"Jordan",t:"3:45 PM", m:"one question on line 47. why the nested ternary"},
+  {d:"Apr 24 · Thursday", o:false,n:"Taylor",t:"3:47 PM", m:"fair point. refactoring to if-else now"},
+  {d:"Apr 25 · Friday",   o:false,n:"Jordan",t:"11:30 AM",m:"client demo pushed to Tuesday btw"},
+  {d:"Apr 25 · Friday",   o:true,            t:"11:32 AM",m:"nice, more time to polish the dashboard"},
+  {d:"Apr 28 · Monday",   o:false,n:"Jordan",t:"9:05 AM", m:"prod is throwing 500s on the checkout flow"},
+  {d:"Apr 28 · Monday",   o:true,            t:"9:07 AM", m:"pulling logs now"},
+  {d:"Apr 28 · Monday",   o:false,n:"Taylor",t:"9:08 AM", m:"I see it. null pointer in the payment service"},
+  {d:"Apr 28 · Monday",   o:true,            t:"9:12 AM", m:"found it. guard clause missing on the discount field"},
+  {d:"Apr 28 · Monday",   o:true,            t:"9:16 AM", m:"deploying now"},
+  {d:"Apr 28 · Monday",   o:false,n:"Taylor",t:"9:22 AM", m:"confirmed fixed. nice catch"},
+  {d:"Apr 30 · Wednesday",o:true,            t:"11:24 AM",m:"LGTM. merged"},
+  {d:"Apr 30 · Wednesday",o:false,n:"Taylor",t:"11:25 AM",m:"🙌"},
+  {d:"May 2 · Friday",    o:false,n:"Taylor",t:"4:35 PM", m:"tests written for my part. CI is green"},
+  {d:"May 2 · Friday",    o:false,n:"Jordan",t:"4:37 PM", m:"nice. everyone have a good weekend"},
+  {d:"May 2 · Friday",    o:true,            t:"4:38 PM", m:"you too 🙏"},
+  {d:"May 6 · Tuesday",   o:false,n:"Jordan",t:"2:00 PM", m:"demo done. client was very happy"},
+  {d:"May 6 · Tuesday",   o:true,            t:"2:05 PM", m:"LET'S GO 🎉"},
+  {d:"May 6 · Tuesday",   o:false,n:"Taylor",t:"2:06 PM", m:"they want analytics next. scope added to Jira"},
+  {d:"May 7 · Wednesday", o:true,            t:"10:08 PM",m:"deploy done. all green 🟢"},
+  {d:"May 7 · Wednesday", o:false,n:"Jordan",t:"10:10 PM",m:"merged. finally lol"},
+  {d:"May 7 · Wednesday", o:false,n:"Taylor",t:"10:11 PM",m:"get some sleep everyone 😴"},
+],
+4:[
+  {d:"Apr 23 · Wednesday",o:false,t:"6:00 PM", m:"hey stranger!! it's been literally forever"},
+  {d:"Apr 23 · Wednesday",o:true, t:"6:18 PM", m:"SAM. I know I'm the worst. how are you??"},
+  {d:"Apr 23 · Wednesday",o:false,t:"6:20 PM", m:"honestly good! just busy with the new studio stuff"},
+  {d:"Apr 23 · Wednesday",o:true, t:"6:21 PM", m:"wait you got a studio?? tell me everything"},
+  {d:"Apr 23 · Wednesday",o:false,t:"6:23 PM", m:"just a small home setup but it's been amazing for writing"},
+  {d:"Apr 23 · Wednesday",o:true, t:"6:24 PM", m:"that's genuinely so cool. you have to let me hear something"},
+  {d:"Apr 24 · Thursday", o:false,t:"1:14 PM", m:"like I can hear what I want it to sound like but my hands won't make it happen"},
+  {d:"Apr 24 · Thursday", o:true, t:"1:16 PM", m:"I've heard musicians call that 'the gap'. the distance between taste and ability"},
+  {d:"Apr 24 · Thursday", o:false,t:"1:18 PM", m:"that's exactly it. also kind of devastating"},
+  {d:"Apr 24 · Thursday", o:true, t:"1:20 PM", m:"it means your taste is ahead of where you are. that's actually good"},
+  {d:"Apr 26 · Saturday", o:false,t:"11:24 AM",m:"the little place on Brow St. starts at 8. super chilled"},
+  {d:"Apr 26 · Saturday", o:true, t:"11:25 AM",m:"I'm there. is it okay to bring someone"},
+  {d:"Apr 26 · Saturday", o:false,t:"11:27 AM",m:"of course! the more the merrier"},
+  {d:"Apr 28 · Monday",   o:false,t:"9:16 PM", m:"it's a bit different to my usual stuff. more electronic"},
+  {d:"Apr 28 · Monday",   o:true, t:"9:17 PM", m:"experimenting is always a good sign"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"3:22 PM", m:"sam. the breakdown at 1:15 is something else. seriously"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"3:24 PM", m:"okay you're just saying that"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"3:25 PM", m:"I'm not. I've listened to it twice already. the texture is really unique"},
+  {d:"May 1 · Thursday",  o:false,t:"8:45 PM", m:"acoustic night was so so good"},
+  {d:"May 1 · Thursday",  o:true, t:"9:00 PM", m:"it really was! that last performer was incredible"},
+  {d:"May 6 · Tuesday",   o:true, t:"11:48 PM",m:"I've listened three times in a row"},
+  {d:"May 6 · Tuesday",   o:false,t:"11:49 PM",m:"I'm genuinely emotional rn thank you"},
+  {d:"May 7 · Wednesday", o:false,t:"10:00 AM",m:"you free saturday morning?"},
+],
+5:[
+  {d:"Apr 23 · Wednesday",o:true, t:"12:00 PM",m:"hey! you settling into the new flat okay?"},
+  {d:"Apr 23 · Wednesday",o:false,t:"12:08 PM",m:"omg yes finally! took me all weekend to unpack but it feels like home now"},
+  {d:"Apr 23 · Wednesday",o:false,t:"12:17 PM",m:"I'm thinking of switching careers. like properly starting over"},
+  {d:"Apr 23 · Wednesday",o:true, t:"12:18 PM",m:"oh wow. what direction are you thinking"},
+  {d:"Apr 23 · Wednesday",o:false,t:"12:20 PM",m:"something creative. I've been doing UX freelance on the side and genuinely love it"},
+  {d:"Apr 23 · Wednesday",o:true, t:"12:22 PM",m:"honestly that tracks. you've always had such a good eye"},
+  {d:"Apr 23 · Wednesday",o:false,t:"12:24 PM",m:"it's scary though. stable job vs what I actually want to do"},
+  {d:"Apr 23 · Wednesday",o:true, t:"12:25 PM",m:"that fear is real but so is regret"},
+  {d:"Apr 25 · Friday",   o:false,t:"5:46 PM", m:"really encouraging. she said there's loads of demand right now"},
+  {d:"Apr 25 · Friday",   o:true, t:"5:48 PM", m:"see! you'd be great at it"},
+  {d:"Apr 25 · Friday",   o:false,t:"5:53 PM", m:"health insurance and rent lol"},
+  {d:"Apr 25 · Friday",   o:true, t:"5:54 PM", m:"okay fair. build up clients first and transition"},
+  {d:"Apr 28 · Monday",   o:false,t:"8:11 PM", m:"lol I'll make extra then. 7pm?"},
+  {d:"Apr 28 · Monday",   o:true, t:"8:12 PM", m:"perfect. want me to bring anything"},
+  {d:"Apr 28 · Monday",   o:false,t:"8:14 PM", m:"wine would be amazing"},
+  {d:"Apr 28 · Monday",   o:true, t:"8:15 PM", m:"already on it"},
+  {d:"Apr 30 · Wednesday",o:false,t:"9:10 AM", m:"I know!! I'm trying to be calm but I'm literally shaking a bit"},
+  {d:"Apr 30 · Wednesday",o:true, t:"9:11 AM", m:"shake and smile. you're going to be great on the call"},
+  {d:"May 2 · Friday",    o:false,t:"10:00 PM",m:"update: I got my first proper freelance client today 🎉"},
+  {d:"May 2 · Friday",    o:true, t:"10:14 PM",m:"PRIYA!!!!! this is huge congratulations!!"},
+  {d:"May 2 · Friday",    o:false,t:"10:19 PM",m:"thank you for always believing in me even when I don't"},
+  {d:"May 2 · Friday",    o:true, t:"10:20 PM",m:"always. now go celebrate 🥂"},
+  {d:"May 2 · Friday",    o:false,t:"10:21 PM",m:"hahaha okay fair enough 😂"},
+],
+6:[
+  {d:"Apr 24 · Thursday", o:false,n:"Carlos", t:"5:12 PM", m:"yes to both. thinking dinner first then the rooftop bar on King St"},
+  {d:"Apr 24 · Thursday", o:false,n:"Priya",  t:"5:14 PM", m:"love that idea. 7pm?"},
+  {d:"Apr 24 · Thursday", o:true,             t:"5:16 PM", m:"works for me"},
+  {d:"Apr 26 · Saturday", o:false,n:"Carlos", t:"11:58 PM",m:"that was such a good night honestly"},
+  {d:"Apr 26 · Saturday", o:false,n:"Priya",  t:"11:59 PM",m:"the food and the rooftop 😍 same time next week"},
+  {d:"Apr 26 · Saturday", o:true,             t:"12:01 AM",m:"absolutely yes"},
+  {d:"Apr 30 · Wednesday",o:false,n:"Carlos", t:"1:00 PM", m:"who's up for bowling Saturday"},
+  {d:"Apr 30 · Wednesday",o:false,n:"Priya",  t:"1:05 PM", m:"I am so bad at bowling but yes obviously"},
+  {d:"Apr 30 · Wednesday",o:true,             t:"1:08 PM", m:"I'm in. 4pm at Lucky Lanes?"},
+  {d:"May 3 · Saturday",  o:false,n:"Carlos", t:"6:30 PM", m:"okay Priya I cannot believe you're this good at bowling"},
+  {d:"May 3 · Saturday",  o:false,n:"Priya",  t:"6:31 PM", m:"I told you I was bad 😇"},
+  {d:"May 3 · Saturday",  o:true,             t:"6:32 PM", m:"two strikes in a row is NOT bad 😂"},
+  {d:"May 5 · Monday",    o:false,n:"Carlos", t:"9:00 AM", m:"this weekend - anyone fancy a day trip to the coast"},
+  {d:"May 5 · Monday",    o:true,             t:"9:12 AM", m:"I'm already packed in my mind"},
+  {d:"May 5 · Monday",    o:false,n:"Priya",  t:"9:20 AM", m:"bringing snacks 🍓"},
+  {d:"May 7 · Wednesday", o:false,n:"Carlos", t:"7:00 PM", m:"forecast looks good for Saturday 🌞"},
+  {d:"May 7 · Wednesday", o:false,n:"Priya",  t:"7:05 PM", m:"YESS"},
+  {d:"May 7 · Wednesday", o:true,             t:"7:10 PM", m:"I'll be ready. this is gonna be so good"},
+  {d:"May 7 · Wednesday", o:false,n:"Carlos", t:"7:11 PM", m:"dinner spot confirmed ✅"},
+],
+7:[
+  {d:"Apr 22 · Tuesday",  o:true, t:"9:00 PM", m:"yo you'd love this article I just read about memory and identity"},
+  {d:"Apr 22 · Tuesday",  o:false,t:"9:20 PM", m:"send it now"},
+  {d:"Apr 22 · Tuesday",  o:false,t:"10:30 PM",m:"finished. that was really something"},
+  {d:"Apr 22 · Tuesday",  o:true, t:"10:32 PM",m:"the part about whether memories define us or just describe us hit different"},
+  {d:"Apr 22 · Tuesday",  o:false,t:"10:34 PM",m:"I keep thinking about it. like who are we without what we remember"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:31 PM", m:"I'd read it. your brain works in such an interesting way"},
+  {d:"Apr 24 · Thursday", o:true, t:"3:33 PM", m:"that's either a compliment or a concern"},
+  {d:"Apr 24 · Thursday", o:false,t:"3:34 PM", m:"hahaha 100% compliment"},
+  {d:"Apr 25 · Friday",   o:true, t:"8:17 PM", m:"okay do NOT read anything about it before you finish. trust me"},
+  {d:"Apr 25 · Friday",   o:false,t:"8:18 PM", m:"ominous. noted"},
+  {d:"Apr 27 · Sunday",   o:false,t:"11:14 PM",m:"I wasn't prepared. sat in silence for 10 minutes after"},
+  {d:"Apr 27 · Sunday",   o:true, t:"11:16 PM",m:"it does that. the director deliberately held that back"},
+  {d:"May 1 · Thursday",  o:false,t:"9:44 PM", m:"me too. so much with so little"},
+  {d:"May 1 · Thursday",  o:true, t:"9:45 PM", m:"the artist's notes said it took four years to get the placement right"},
+  {d:"May 1 · Thursday",  o:false,t:"9:46 PM", m:"patience like that is its own kind of genius"},
+  {d:"May 2 · Friday",    o:false,t:"11:20 AM",m:"I ran into someone from ten years ago completely randomly yesterday"},
+  {d:"May 2 · Friday",    o:true, t:"11:22 AM",m:"the best patterns feel like fate from the inside"},
+  {d:"Apr 26 · Saturday", o:false,t:"11:00 PM",m:"yeah that article was crazy good"},
+],
+8:[
+  {d:"Apr 22 · Tuesday",  o:false,t:"12:46 PM",m:"yeah going with Jen. should be fun"},
+  {d:"Apr 22 · Tuesday",  o:true, t:"12:47 PM",m:"nice! we can all catch up. it's been ages"},
+  {d:"Apr 22 · Tuesday",  o:false,t:"12:49 PM",m:"I KNOW. literal months. we need to fix this"},
+  {d:"Apr 24 · Thursday", o:true, t:"8:15 PM", m:"the key is not making it too ambitious at first. 10 mins beats an hour you won't do"},
+  {d:"Apr 24 · Thursday", o:false,t:"8:17 PM", m:"okay that's actually really helpful. trying 10 mins tomorrow"},
+  {d:"Apr 26 · Saturday", o:false,t:"7:30 PM", m:"Kira's party was SO good. so happy we finally did this"},
+  {d:"Apr 26 · Saturday", o:true, t:"7:35 PM", m:"right?? we need to stop leaving it so long"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"6:27 PM", m:"honestly calmer in the mornings. I'm a convert"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"6:28 PM", m:"told you!! the difference after a week is noticeable"},
+  {d:"May 2 · Friday",    o:false,t:"3:30 PM", m:"that was SO needed. monthly lunch pact from now on"},
+  {d:"May 2 · Friday",    o:true, t:"3:42 PM", m:"already in the diary"},
+  {d:"May 5 · Monday",    o:false,t:"9:59 PM", m:"I got it 🎉🎉🎉"},
+  {d:"May 5 · Monday",    o:true, t:"10:00 PM",m:"MIA. OH MY GOD. CONGRATULATIONS!!!"},
+  {d:"May 5 · Monday",    o:false,t:"10:01 PM",m:"I've been sitting on this for a week, they wanted to keep it quiet"},
+  {d:"May 5 · Monday",    o:true, t:"10:04 PM",m:"I'm honoured. also you deserve it SO much"},
+  {d:"May 5 · Monday",    o:false,t:"10:10 PM",m:"okay I NEED to tell you something"},
+  {d:"May 5 · Monday",    o:true, t:"10:10 PM",m:"THERE'S MORE??"},
+  {d:"May 5 · Monday",    o:false,t:"10:12 PM",m:"hahaha Friday works and I'll tell you everything"},
+],
+9:[
+  {d:"Apr 22 · Tuesday",  o:false,n:"Lena",t:"8:00 PM", m:"chapter 10 was SO much better than 9. I'm back in"},
+  {d:"Apr 22 · Tuesday",  o:true,          t:"8:10 PM", m:"right?? the pacing finally picks up"},
+  {d:"Apr 22 · Tuesday",  o:false,n:"Mia", t:"8:12 PM", m:"I told you it was worth sticking with"},
+  {d:"Apr 24 · Thursday", o:false,n:"Lena",t:"9:45 PM", m:"same! the chapter 12 reveal tho 👀"},
+  {d:"Apr 24 · Thursday", o:true,          t:"9:50 PM", m:"don't spoil it for anyone who hasn't got there yet!!"},
+  {d:"Apr 24 · Thursday", o:false,n:"Mia", t:"9:51 PM", m:"🤐"},
+  {d:"Apr 27 · Sunday",   o:false,n:"Lena",t:"8:30 PM", m:"that was a great session. chapter 12 discussion was fire"},
+  {d:"Apr 27 · Sunday",   o:true,          t:"8:35 PM", m:"agreed. two hours goes so fast"},
+  {d:"Apr 29 · Tuesday",  o:false,n:"Mia", t:"11:13 PM",m:"that character deserved better. that's all I'll say"},
+  {d:"Apr 29 · Tuesday",  o:false,n:"Lena",t:"11:16 PM",m:"I'M ON 14 DON'T SAY ANYTHING"},
+  {d:"Apr 29 · Tuesday",  o:true,          t:"11:18 PM",m:"lol this chat is a minefield"},
+  {d:"May 1 · Thursday",  o:false,n:"Lena",t:"7:11 PM", m:"mia was right. not okay."},
+  {d:"May 1 · Thursday",  o:true,          t:"7:15 PM", m:"the author really didn't care about our feelings"},
+  {d:"May 4 · Sunday",    o:false,n:"Mia", t:"6:09 PM", m:"added mine"},
+  {d:"May 4 · Sunday",    o:false,n:"Lena",t:"6:12 PM", m:"added mine. excited about these options"},
+  {d:"May 6 · Tuesday",   o:false,n:"Lena",t:"7:00 PM", m:"chapter 18 broke me ngl"},
+  {d:"May 6 · Tuesday",   o:true,          t:"7:14 PM", m:"how are we all getting through this book"},
+  {d:"May 6 · Tuesday",   o:false,n:"Mia", t:"7:16 PM", m:"love and pain apparently"},
+  {d:"May 6 · Tuesday",   o:false,n:"Lena",t:"7:18 PM", m:"10/10 recommend despite the emotional damage"},
+],
+10:[
+  {d:"Apr 22 · Tuesday",  o:false,t:"4:16 PM", m:"the case study on the redesign project is chef's kiss"},
+  {d:"Apr 22 · Tuesday",  o:true, t:"4:18 PM", m:"embarrassingly long to make. like three weeks of tweaking"},
+  {d:"Apr 22 · Tuesday",  o:false,t:"4:23 PM", m:"send it everywhere. you're wasting it if you don't"},
+  {d:"Apr 24 · Thursday", o:true, t:"11:15 AM",m:"the two we talked about. fingers crossed"},
+  {d:"Apr 24 · Thursday", o:false,t:"11:17 AM",m:"they'd be lucky to have you. when do you hear back"},
+  {d:"Apr 24 · Thursday", o:false,t:"8:14 PM", m:"also that ramen after was incredible"},
+  {d:"Apr 24 · Thursday", o:true, t:"8:15 PM", m:"still thinking about it"},
+  {d:"Apr 29 · Tuesday",  o:false,t:"3:36 PM", m:"they want to set up a call 👀"},
+  {d:"Apr 29 · Tuesday",  o:true, t:"3:37 PM", m:"JORDAN. that is basically an interview. that's amazing"},
+  {d:"Apr 30 · Wednesday",o:true, t:"7:14 PM", m:"you've got this. call me after"},
+  {d:"May 1 · Thursday",  o:false,t:"4:12 PM", m:"they liked my work AND how I described my process"},
+  {d:"May 1 · Thursday",  o:true, t:"4:13 PM", m:"that is exactly what you want them to say"},
+  {d:"May 7 · Wednesday", o:false,t:"4:44 PM", m:"they offered me a project. starting next month"},
+  {d:"May 7 · Wednesday", o:true, t:"4:45 PM", m:"I am so proud of you. you worked so hard for this"},
+  {d:"May 7 · Wednesday", o:false,t:"4:46 PM", m:"I can't stop smiling honestly"},
+  {d:"May 7 · Wednesday", o:false,t:"4:48 PM", m:"bet. see you at 7"},
+],
+};
+
+// group sender colors for group chats
+const SENDER_COLORS=['#e06c5a','#6b9fd4','#7bc67e','#e8b86a','#a07cbd','#6bbdc6'];
+const senderColorMap={};
+function getSenderColor(name){
+  if(!senderColorMap[name]) senderColorMap[name]=SENDER_COLORS[Object.keys(senderColorMap).length%SENDER_COLORS.length];
+  return senderColorMap[name];
+}
+
+let activeId=null, currentTab='all';
+
+function switchTab(el,tab){
+  document.querySelectorAll('.wa-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); currentTab=tab; renderList();
+}
+
+function renderList(filter=''){
+  const list=document.getElementById('chat-list');
+  list.innerHTML='';
+  let contacts=[...C];
+  if(currentTab==='unread') contacts=contacts.filter(c=>c.un>0);
+  if(currentTab==='groups') contacts=contacts.filter(c=>c.grp);
+  if(filter) contacts=contacts.filter(c=>
+    c.name.toLowerCase().includes(filter.toLowerCase())||
+    c.pr.toLowerCase().includes(filter.toLowerCase())
+  );
+  if(!contacts.length){
+    list.innerHTML='<div style="padding:24px;text-align:center;color:var(--wa-text2);font-size:14px">No chats found</div>';
+    return;
+  }
+  contacts.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='wa-chat-item'+(activeId===c.id?' active':'');
+    el.onclick=()=>openChat(c.id);
+    const ini=initials(c.name);
+    const hasUnread=c.un>0;
+    el.innerHTML=`
+      <div class="wa-avatar ${c.on?'online':''}" style="background:${c.col};font-size:${ini.length===1?'22px':'18px'}">${ini}</div>
+      <div class="wa-chat-info">
+        <div class="wa-chat-row1">
+          <span class="wa-chat-name">${c.name}</span>
+          <span class="wa-chat-time ${hasUnread&&!c.muted?'unread-time':''}">${c.tm}</span>
+        </div>
+        <div class="wa-chat-row2">
+          <span class="wa-chat-preview">${!c.grp?'<span class="tick">✓✓</span>':''} ${c.pr}</span>
+          ${c.muted?`<span class="wa-mute-icon">🔇</span>`:''}
+          ${hasUnread?`<div class="wa-badge" style="${c.muted?'background:#8696a0':''}">${c.un>99?'99+':c.un}</div>`:''}
+        </div>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function openChat(id){
+  activeId=id;
+  const contact=C.find(c=>c.id===id);
+  contact.un=0; renderList();
+  const ini=initials(contact.name);
+  const pa=document.getElementById('panel-avatar');
+  Object.assign(pa.style,{
+    background:contact.col,width:'40px',height:'40px',borderRadius:'50%',
+    display:'flex',alignItems:'center',justifyContent:'center',
+    fontSize:ini.length===1?'18px':'15px',fontWeight:'600',color:'#fff',flexShrink:'0'
+  });
+  pa.textContent=ini;
+  document.getElementById('panel-name').textContent=contact.name;
+  const st=document.getElementById('panel-status');
+  if(contact.grp){
+    st.textContent='Alex Johnson, '+contact.name.replace(/[^\w\s,]/g,'').trim();
+    st.style.color='var(--wa-text2)';
+  } else {
+    st.textContent=contact.on?'online':'last seen today at '+['8:42 AM','9:15 AM','11:03 AM','2:27 PM','4:56 PM'][id%5];
+    st.style.color=contact.on?'var(--wa-green)':'var(--wa-text2)';
+  }
+  const msgs=V[id]||[];
+  const box=document.getElementById('messages');
+  box.innerHTML='';
+  // encryption banner at top
+  const banner=document.createElement('div');
+  banner.className='wa-encrypt-bar';
+  banner.innerHTML='🔒 Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.';
+  box.appendChild(banner);
+  let lastDay=null,lastKey=null,lastGroup=null;
+  msgs.forEach(m=>{
+    const dir=m.o?'out':'in';
+    if(m.d!==lastDay){
+      const dv=document.createElement('div');
+      dv.className='wa-day-badge';
+      dv.innerHTML=`<span>${m.d}</span>`;
+      box.appendChild(dv); lastDay=m.d; lastKey=null; lastGroup=null;
+    }
+    const key=dir+(m.n||'');
+    if(key!==lastKey){
+      const g=document.createElement('div');
+      g.className='wa-msg-group '+dir;
+      if(!m.o&&m.n&&contact.grp){
+        const sn=document.createElement('div');
+        sn.className='wa-sender-name';
+        sn.style.color=getSenderColor(m.n);
+        sn.textContent=m.n;
+        g.appendChild(sn);
+      }
+      box.appendChild(g); lastGroup=g; lastKey=key;
+    }
+    const b=document.createElement('div');
+    b.className='wa-bubble';
+    const msgText=document.createElement('span');
+    msgText.textContent=m.m;
+    b.appendChild(msgText);
+    const meta=document.createElement('div');
+    meta.className='wa-bubble-meta';
+    const timeEl=document.createElement('span');
+    timeEl.className='wa-bubble-time';
+    timeEl.textContent=m.t;
+    meta.appendChild(timeEl);
+    if(m.o){
+      const tick=document.createElement('span');
+      tick.className='wa-tick-icon';
+      tick.textContent='✓✓';
+      meta.appendChild(tick);
+    }
+    b.appendChild(meta);
+    lastGroup.appendChild(b);
+  });
+  document.getElementById('empty-state').style.display='none';
+  const cv=document.getElementById('chat-view');
+  cv.style.display='flex'; box.scrollTop=box.scrollHeight;
+}
+
+function doLogin(){
+  const u=document.getElementById('login-user').value;
+  const p=document.getElementById('login-pass').value;
+  if(!u||!p) return;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  renderList();
+}
+
+function doLogout(){
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  activeId=null;
+  document.getElementById('empty-state').style.display='flex';
+  document.getElementById('chat-view').style.display='none';
+}
+
+function filterChats(v){renderList(v);}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter') doLogin();});
+});
+</script>
+</body>
+</html>
